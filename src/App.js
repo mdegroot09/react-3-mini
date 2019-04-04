@@ -29,8 +29,16 @@ class App extends Component {
   }
 
   getVehicles() {
-    // axios (GET)
-    // setState with response -> vehiclesToDisplay
+    axios.get('https://joes-autos.herokuapp.com/api/vehicles').then( res => {
+      let { data } = res 
+      this.setState({
+        vehiclesToDisplay: data
+      })
+      toast.success("Successfully got Vehicles.");
+    })
+    .catch( err => {
+      toast.error("Couldn't get vehicles")
+    })
   }
 
   getPotentialBuyers() {
@@ -41,6 +49,17 @@ class App extends Component {
   sellCar(id) {
     // axios (DELETE)
     // setState with response -> vehiclesToDisplay
+    axios.delete(`https://joes-autos.herokuapp.com/api/vehicles/${id}`)
+    .then( res => {
+      let vehicles = res.data.vehicles
+      this.setState({
+        vehiclesToDisplay: vehicles
+      })
+      toast.success("Successfully sold vehicle");
+    })
+    .catch( err => {
+      toast.error('Could not delete vehicle')
+    })
   }
 
   filterByMake() {
@@ -58,8 +77,17 @@ class App extends Component {
   }
 
   updatePrice(priceChange, id) {
-    // axios (PUT)
-    // setState with response -> vehiclesToDisplay
+    axios.put(`https://joes-autos.herokuapp.com/api/vehicles/${id}/${priceChange}`)
+    .then( res => {
+      let vehicles = res.data.vehicles 
+      this.setState({
+        vehiclesToDisplay: vehicles
+      })
+      toast.success('Successfully updated price')
+    })
+    .catch( err => {
+      toast.error('could not update price')
+    })
   }
 
   addCar() {
@@ -70,6 +98,18 @@ class App extends Component {
       year: this.year.value,
       price: this.price.value
     };
+
+    axios.post('https://joes-autos.herokuapp.com/api/vehicles', newCar)
+    .then( res => {
+      let vehicles = res.data.vehicles 
+      this.setState({
+        vehiclesToDisplay: vehicles
+      })
+      toast.success('Created vehicle')
+    })
+    .catch( err => {
+      toast.error('could not create car')
+    })
 
     // axios (POST)
     // setState with response -> vehiclesToDisplay
